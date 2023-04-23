@@ -1,7 +1,7 @@
 #include <iostream>
 #include <mpi.h>
 
-int main(int argc; char *argv[]) {
+int main(int argc, char *argv[]){
     int rank, size, N;
     // int value = 0; // if using integer
     int arrsize = 500000;
