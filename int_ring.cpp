@@ -4,7 +4,8 @@
 int main(int argc; char *argv[]) {
     int rank, size, N;
     // int value = 0; // if using integer
-    int* value = new int[500000];
+    int arrsize = 500000;
+    int* value = new int[arrsize];
     double start_t, end_t;
 
     MPI_Init(&argc, &argv);
@@ -24,14 +25,25 @@ int main(int argc; char *argv[]) {
 
     for(int i = 0; i < N; i++) {
         if(rank == 0) {
-            MPI_Send(&value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-            MPI_Recv(&value, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            // value += rank; // when using int
+            // Uncomment when using int
+            // MPI_Send(&value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+            // MPI_Recv(&value, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            // value += rank; 
+
+            // uncomment when using arr
+            MPI_Send(&value, arrsize, MPI_INT, 1, 0, MPI_COMM_WORLD);
+            MPI_Recv(&value, arrsize, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         } 
         else{
-            MPI_Recv(&value, 1, MPI_INT, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            // value += rank; // when using int
-            MPI_Send(&value, 1, MPI_INT, (rank + 1) % size, 0, MPI_COMM_WORLD);
+            // Uncomment when using int
+            // MPI_Recv(&value, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            // value += rank;
+            // MPI_Send(&value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+
+            // uncomment when using arr
+            MPI_Recv(&value, arrsize, MPI_INT, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            MPI_Send(&value, arrsize, MPI_INT, (rank + 1) % size, 0, MPI_COMM_WORLD);
+            
         }
     }
 
