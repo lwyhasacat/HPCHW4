@@ -3,8 +3,10 @@
 
 int main(int argc, char *argv[]) {
     int rank, size, N;
-    int value = 0; // if using integer
     double start_t, end_t;
+
+    const int array_size = 1000000; // set the size of the array
+    double value[array_size] = {}; // initialize the array with zeros
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -23,23 +25,25 @@ int main(int argc, char *argv[]) {
 
     for(int i = 0; i < N; i++) {
         if(rank == 0) {
-            // Uncomment when using int
-            MPI_Send(value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-            MPI_Recv(value, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            value += rank; 
+            MPI_Send(value, array_size, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+            MPI_Recv(value, array_size, MPI_DOUBLE, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            for(int j = 0; j < array_size; j++) {
+                value[j] += rank;
+            }
         } 
         else{
-            // Uncomment when using int
-            MPI_Recv(value, 1, MPI_INT, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            value += rank;
-            MPI_Send(value, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+            MPI_Recv(value, array_size, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            for(int j = 0; j < array_size; j++) {
+                value[j] += rank;
+            }
+            MPI_Send(value, array_size, MPI_DOUBLE, (rank + 1) % size, 0, MPI_COMM_WORLD);
         }
     }
 
     end_t = MPI_Wtime();
 
     if (rank == 0) {
-        std::cout << "total value after " << N << " loops: " << value << std::endl;
+        std::cout << "total value after " << N << " loops: " << value[0] << std::endl;
         std::cout << "total time: " << end_t - start_t << " seconds" << std::endl;
     }
 
