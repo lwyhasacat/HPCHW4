@@ -12,7 +12,7 @@ int main(int argc; char *argv[]) {
 
     if (argc != 2) {
         printf("error: not enough input");
-        exit();
+        exit(1);
     }
     else{
         N = std::stoi(argv[1])
