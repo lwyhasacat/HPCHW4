@@ -58,9 +58,11 @@ int main(int argc, char *argv[]) {
     end_t = MPI_Wtime();
 
     // for array
+    // double bandwidth=(2.0 * array_size * sizeof(int)) / (1024 * 1024 * (end_t - start_t));
     // if (rank == 0) {
     //     std::cout << "total value after " << N << " loops: " << value[0] << std::endl;
     //     std::cout << "total time: " << end_t - start_t << " seconds" << std::endl;
+    //     std::cout << "bandwidth calculated: " << bandwidth <<  " MB/s" << std::endl;
     // }
 
     // for int
