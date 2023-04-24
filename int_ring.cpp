@@ -28,15 +28,9 @@ int main(int argc, char *argv[]) {
         if(rank == 0) {
             MPI_Send(value, array_size, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
             MPI_Recv(value, array_size, MPI_DOUBLE, size - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            for(int j = 0; j < array_size; j++) {
-                value[j] += rank;
-            }
         } 
         else{
             MPI_Recv(value, array_size, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            for(int j = 0; j < array_size; j++) {
-                value[j] += rank;
-            }
             MPI_Send(value, array_size, MPI_DOUBLE, (rank + 1) % size, 0, MPI_COMM_WORLD);
         }
     }
@@ -48,7 +42,7 @@ int main(int argc, char *argv[]) {
     if (rank == 0) {
         std::cout << "total value after " << N << " loops: " << value[0] << std::endl;
         std::cout << "total time: " << end_t - start_t << " seconds" << std::endl;
-        std::cout << "bandwidth calculated: " << bandwidth <<  " MB/s" << std::endl;
+        std::cout << "bandwidth calculated: " << bandwidth <<  " GB/s" << std::endl;
     }
 
     MPI_Finalize();
